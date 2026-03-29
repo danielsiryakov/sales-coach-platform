@@ -1,10 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
-import { getSession, getSessionScore, getTranscript, generateCoachingFeedback } from '@/lib/api';
+import { getSession, getSessionScore, getTranscript, generateCoachingFeedback, deleteSession } from '@/lib/api';
 import type { SessionDetail, ScoreDetail, TranscriptEntry } from '@/types';
 import { formatDateTime, formatDuration, getScoreColor, getScoreBgColor, cn } from '@/lib/utils';
 import {
@@ -21,10 +21,13 @@ import {
   Lightbulb,
   Sparkles,
   Loader2,
+  Trash2,
+  X,
 } from 'lucide-react';
 
 export default function SessionDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const sessionId = params.sessionId as string;
 
   const [session, setSession] = useState<SessionDetail | null>(null);
@@ -36,6 +39,20 @@ export default function SessionDetailPage() {
   const [coachingFeedback, setCoachingFeedback] = useState<string | null>(null);
   const [generatingFeedback, setGeneratingFeedback] = useState(false);
   const [feedbackError, setFeedbackError] = useState<string | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
+  const handleDelete = async () => {
+    setDeleting(true);
+    try {
+      await deleteSession(sessionId);
+      router.push('/history');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to delete session');
+      setDeleting(false);
+      setDeleteConfirm(false);
+    }
+  };
 
   useEffect(() => {
     async function loadData() {
@@ -111,15 +128,60 @@ export default function SessionDetailPage() {
 
   return (
     <div className="p-8">
+      {/* Delete Confirmation Modal */}
+      {deleteConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl shadow-xl p-6 max-w-md w-full mx-4">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">Delete Session?</h3>
+              <button
+                onClick={() => setDeleteConfirm(false)}
+                className="p-1 text-gray-400 hover:text-gray-600"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <p className="text-gray-600 mb-6">
+              This will permanently delete this practice session, including the recording, transcript, scores, and all analysis data. This action cannot be undone.
+            </p>
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={() => setDeleteConfirm(false)}
+                className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                disabled={deleting}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                disabled={deleting}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50"
+              >
+                {deleting ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="mb-8">
-        <Link
-          href="/history"
-          className="inline-flex items-center text-gray-500 hover:text-gray-700 mb-4"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to History
-        </Link>
+        <div className="flex items-center justify-between mb-4">
+          <Link
+            href="/history"
+            className="inline-flex items-center text-gray-500 hover:text-gray-700"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to History
+          </Link>
+          <button
+            onClick={() => setDeleteConfirm(true)}
+            className="inline-flex items-center px-3 py-2 text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors"
+          >
+            <Trash2 className="w-4 h-4 mr-2" />
+            Delete Session
+          </button>
+        </div>
         <div className="flex items-start justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">

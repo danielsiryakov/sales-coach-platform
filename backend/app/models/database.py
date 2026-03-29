@@ -121,8 +121,8 @@ class PracticeSession(Base):
     # Relationships
     scenario_template = relationship("ScenarioTemplate")
     business_context = relationship("BusinessContext")
-    recording = relationship("CallRecording", back_populates="session", uselist=False)
-    score = relationship("CallScore", back_populates="session", uselist=False)
+    recording = relationship("CallRecording", back_populates="session", uselist=False, cascade="all, delete-orphan")
+    score = relationship("CallScore", back_populates="session", uselist=False, cascade="all, delete-orphan")
 
 
 class CallRecording(Base):
@@ -184,8 +184,8 @@ class CallScore(Base):
 
     # Relationships
     session = relationship("PracticeSession", back_populates="score")
-    skill_evaluations = relationship("SkillEvaluation", back_populates="call_score")
-    recommendations = relationship("ImprovementRecommendation", back_populates="call_score")
+    skill_evaluations = relationship("SkillEvaluation", back_populates="call_score", cascade="all, delete-orphan")
+    recommendations = relationship("ImprovementRecommendation", back_populates="call_score", cascade="all, delete-orphan")
 
 
 class SkillEvaluation(Base):
