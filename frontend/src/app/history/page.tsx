@@ -122,6 +122,42 @@ export default function HistoryPage() {
         </div>
       )}
 
+      {/* Delete Confirmation Modal */}
+      {deleteConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl shadow-xl p-6 max-w-md w-full mx-4">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">Delete Session?</h3>
+              <button
+                onClick={() => setDeleteConfirm(null)}
+                className="p-1 text-gray-400 hover:text-gray-600"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <p className="text-gray-600 mb-6">
+              This will permanently delete this practice session, including the recording, transcript, scores, and all analysis data. This action cannot be undone.
+            </p>
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={() => setDeleteConfirm(null)}
+                className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                disabled={deleting}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                disabled={deleting}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50"
+              >
+                {deleting ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {sessions.length === 0 ? (
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
           <Phone className="w-16 h-16 mx-auto text-gray-300 mb-4" />
@@ -143,42 +179,6 @@ export default function HistoryPage() {
           </Link>
         </div>
       ) : (
-        {/* Delete Confirmation Modal */}
-        {deleteConfirm && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-xl shadow-xl p-6 max-w-md w-full mx-4">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">Delete Session?</h3>
-                <button
-                  onClick={() => setDeleteConfirm(null)}
-                  className="p-1 text-gray-400 hover:text-gray-600"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-              <p className="text-gray-600 mb-6">
-                This will permanently delete this practice session, including the recording, transcript, scores, and all analysis data. This action cannot be undone.
-              </p>
-              <div className="flex justify-end space-x-3">
-                <button
-                  onClick={() => setDeleteConfirm(null)}
-                  className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-                  disabled={deleting}
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={confirmDelete}
-                  disabled={deleting}
-                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50"
-                >
-                  {deleting ? 'Deleting...' : 'Delete'}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           <div className="divide-y divide-gray-200">
             {sessions.map((session) => (
