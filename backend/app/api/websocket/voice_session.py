@@ -338,6 +338,9 @@ def _combine_audio(user_audio: bytes, ai_audio: bytes) -> bytes:
 
 async def _run_analysis(session_uuid: str):
     """Run AI analysis on the completed call."""
+    # Small delay to ensure database commits are fully visible
+    await asyncio.sleep(1)
+
     try:
         async with async_session_maker() as db:
             analysis_service = AnalysisService(db)
