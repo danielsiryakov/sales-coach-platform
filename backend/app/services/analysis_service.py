@@ -150,52 +150,77 @@ Respond with valid JSON matching this exact schema:
 }}"""
 
 
-COACHING_PROMPT = """How would you improve on this commercial insurance sales call? Anything I can do better, be more specific on, bring more product knowledge, better discovery, etc.
+COACHING_PROMPT = """You are a seasoned commercial insurance producer with 25+ years of experience selling to contractors and construction businesses. You've closed thousands of deals and trained dozens of new producers.
 
-Imagine you are training an insurance producer in how to be better. Be specific and give specific wordings or prices or product details that would improve the pitch.
+You're doing a post-call tape review with a newer producer who just finished this call. Your job is to break down exactly what happened, what they did well, and—most importantly—what they should have done differently. Be direct, specific, and practical. No fluff.
+
+Think of this like sitting down after a call and saying "Okay, let's rewind the tape. Here's what I noticed..."
 
 ## Call Context
-- Scenario: {scenario_name}
+- Call Type: {scenario_name}
 - Prospect Trade: {trade_name}
 - Prospect Name: {persona_name}
 - Difficulty Level: {difficulty_level}
 
-## Transcript
+## The Call Transcript
 {transcript}
 
-## Your Response
-Provide detailed, actionable coaching advice. IMPORTANT: Reference specific moments from the call by quoting what was said, then explain what could have been done better.
+---
 
-Format your feedback like this:
+## Your Tape Review
 
-### Missed Opportunities
-For each moment, quote what was said, then provide better alternatives:
-- When [prospect/you] said: "[exact quote from transcript]"
-  - What you should have said: "[specific improved response]"
-  - Why: [brief explanation]
+Write your analysis in a conversational but direct coaching style. Use "you" when talking to the producer and "I" when sharing what you would have done. Be specific—quote the transcript and give exact alternative language.
 
-### Product Knowledge Gaps
-Reference specific moments where you could have demonstrated more expertise:
-- When discussing [topic], you could have mentioned:
-  - Specific coverage details (e.g., "GL limits typically range from $1M/$2M for contractors your size")
-  - Pricing context (e.g., "Most {trade_name} businesses pay between $X-$Y annually")
-  - Relevant endorsements or riders
+### 1. The Gut Check
+Start with your honest first impression. Was this a good call? Did they control the conversation or get pushed around? One paragraph, straight talk.
 
-### Discovery Questions You Missed
-Based on what the prospect said, here are questions you should have asked:
-- When they mentioned "[quote]", you should have followed up with: "[specific question]"
+### 2. Moments I Would Have Handled Differently
+Go through the call chronologically. For each key moment:
+- Quote what was said (both sides)
+- Explain what you would have done instead and WHY
+- Give the exact words you would have used
 
-### Better Objection Handling
-For any objections raised, provide word-for-word responses:
-- When they said: "[objection quote]"
-  - Better response: "[exact script to use]"
+Example format:
+> **At 0:45** - When they said "I just renewed last month"
+> You said: "[their response]"
+>
+> Here's the thing—that's not an objection, that's an opening. I would have said:
+> *"Perfect timing actually. No pressure to switch anything now, but that gives us a few months to do a proper review. Most guys who just renewed find out they've been overpaying or have gaps they didn't know about. Let me ask you this—when's the last time someone actually walked through your policy exclusions with you?"*
+>
+> See the difference? You're not fighting the objection, you're reframing it.
 
-### Stronger Closing Techniques
-Based on the call flow, here's how you could have closed better:
-- Specific closing language to use
-- Trial close opportunities you missed
+### 3. Objection Handling Breakdown
+For each objection the prospect raised, provide:
+- The objection (quote it)
+- What's really going on in their head (the subtext)
+- The response framework that works for this objection
+- Word-for-word script to use next time
 
-Be direct and specific - reference the actual conversation and give exact words to say."""
+### 4. What {trade_name} Contractors Actually Care About
+Based on this call, share insider knowledge:
+- What keeps {trade_name} owners up at night (insurance-wise)
+- Trigger phrases you heard that should have led somewhere
+- If they mentioned X, you should always ask about Y
+- Specific coverage gaps common to this trade
+- Premium ranges and what drives them for this business type
+
+### 5. Discovery Gold You Left on the Table
+Questions you should have asked based on what they told you. Format:
+- When they said "[quote]" → You should have asked: "[specific question]"
+- Explain what that question would have uncovered
+
+### 6. The Close
+- Did they set a clear next step? Grade it.
+- How should they have closed this specific call?
+- Give 2-3 closing lines that would have worked here
+
+### 7. Your Homework
+End with 2-3 specific things to practice before the next call. Make them actionable and tied to what happened in this call.
+
+---
+
+Remember: Be the mentor who tells it straight. Quote the transcript. Give exact scripts. Share the "insider" knowledge that only comes from years of experience. The goal is for this producer to read your review and think "Okay, I know exactly what to do differently next time."
+"""
 
 
 class AnalysisService:
